@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function
 
-from flask import current_app, g
+from flask import current_app
 
 from . import Resource
 from .. import schemas
@@ -12,6 +12,6 @@ class DeviceId(Resource):
 
     def get(self, id):
         current_app.logger.debug(id)
-        result = device_controller.get(self, g, deviceId=id)
+        result = device_controller.get(self, deviceId=id)
         return result, 200, None
 
