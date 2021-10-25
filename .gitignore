@@ -127,3 +127,21 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# swagger_py_codegen auto-generated sources without modifications
+
+simple_registration_server/server_api/static/
+simple_registration_server/server_api/v1/schemas.py
+simple_registration_server/server_api/v1/routes.py
+simple_registration_server/server_api/v1/api/__init__.py
+simple_registration_server/server_api/v1/api/secret.py
+simple_registration_server/server_api/v1/__init__.py
+simple_registration_server/server_api/v1/routes.py
+simple_registration_server/server_api/v1/schemas.py
+simple_registration_server/server_api/v1/validators.py
+simple_registration_server/requirements.txt
+
+# VIM
+*.swp
+

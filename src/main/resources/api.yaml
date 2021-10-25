@@ -1,0 +1,195 @@
+---
+swagger: "2.0"
+info:
+  description: "This is the interface definition of a simple device registration server (simple-registration-service)."
+  version: "1.0.0"
+  title: "Simple Device Registration"
+  termsOfService: "https://robxtask.salzburgresearch.at/legal-notice/"
+  contact:
+    email: "fstroh@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+# host: "robxtask.salzburgresearch.at"
+schemes:
+- "https"
+- "http"
+basePath: "/v1"
+tags:
+- name: "devices"
+  description: "Everything about devices"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/ROBxTASK"
+paths:
+  /version:
+    get:
+      description: "get the name and version string\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Version"
+  /device/{id}:
+    get:
+      tags:
+      - "devices"
+      description: "get a specific device object by its id\n"
+      produces:
+      - "application/json"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: An ID-String of the Device (e.g. MAC Address)
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Device"
+  /device:
+    post:
+      tags:
+      - "devices"
+      description: "post a device new object\n"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Device object that needs to be added"
+        required: false
+        schema:
+          $ref: "#/definitions/Device"
+      responses:
+        "200":
+          description: "device post successful"
+        "400":
+          description: "device post not successful, bad request."
+    put:
+      tags:
+      - "devices"
+      description: "update a specific device object by its id\n"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Device object that shall be updated"
+          required: true
+          schema:
+            $ref: "#/definitions/Device"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Device not found"
+        "405":
+          description: "Validation exception"
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Device"
+  /devices:
+    get:
+      tags:
+      - "devices"
+      description: "get list of devices\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Device"
+  /secret:
+    get:
+      summary: Return secret string
+      responses:
+        200:
+          description: secret response
+          schema:
+            type: string
+      security:
+        # enable authentication and require the "uid" scope for this endpoint
+        - oauth2: ['uid']
+
+definitions:
+  Version:
+    type: "object"
+    properties:
+      serviceId:
+        type: "string"
+      version:
+        type: "string"
+    title: "Version Object"
+    example:
+      serviceId: "serviceId"
+      version: "version"
+  Skill:
+    type: "object"
+    properties:
+      SkillName:
+        type: "string"
+      SkillVersion:
+        type: "string"
+      SkillDescription:
+        type: "string"
+    title: "Skill Object"
+    example:
+      SkillName: "SkillName"
+      SkillDescription: "SkillDescription"
+      SkillVersion: "SkillVersion"
+  Device:
+    type: "object"
+    properties:
+      DeviceID:
+        type: "string"
+        xml:
+          name: "DeviceID"
+      DeviceName:
+        type: "string"
+      DeviceDescription:
+        type: "string"
+      Skills:
+        type: "array"
+        items:
+          $ref: "#/definitions/Skill"
+    title: "Device Object"
+    example:
+      DeviceDescription: "DeviceDescription"
+      Skills:
+      - SkillName: "SkillName"
+        SkillDescription: "SkillDescription"
+        SkillVersion: "SkillVersion"
+      - SkillName: "SkillName"
+        SkillDescription: "SkillDescription"
+        SkillVersion: "SkillVersion"
+      DeviceID: "DeviceID"
+      DeviceName: "DeviceName"
+externalDocs:
+  description: "Find out more about ROBxTASK"
+  url: "http://robxtask.salzburgresearch.at"
+
+  
+
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: https://example.com/oauth2/dialog
+    # the token info URL is hardcoded for our mock_tokeninfo.py script
+    # you can also pass it as an environment variable TOKENINFO_URL
+    # x-tokenInfoUrl: http://localhost:7979/tokeninfo
+    scopes:
+      uid: Unique identifier of the user accessing the service.
